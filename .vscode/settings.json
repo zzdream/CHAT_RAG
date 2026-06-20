@@ -1,0 +1,12 @@
+{
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/__init__.py": true
+  },
+  "search.exclude": {
+    "**/__pycache__": true,
+    "web/node_modules": true,
+    "web/dist": true
+  }
+}

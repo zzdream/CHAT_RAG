@@ -1,0 +1,9 @@
+{
+  "name": "study-llm-root",
+  "private": true,
+  "scripts": {
+    "dev": "bash scripts/dev.sh",
+    "dev:server": "cd server && ./venv/bin/uvicorn main:app --reload --host 0.0.0.0 --port 8000",
+    "dev:web": "pnpm --dir web dev"
+  }
+}

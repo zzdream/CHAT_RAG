@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+openai
+python-multipart
+python-dotenv
+slowapi
+
+# Phase 2 RAG
+FlagEmbedding
+chromadb
+sqlalchemy
