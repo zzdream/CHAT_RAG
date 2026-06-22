@@ -305,12 +305,23 @@
                       停止
                     </button>
                     <button
-                      v-if="speechSupported"
                       class="scene-composer__mic"
-                      :class="{ 'scene-composer__mic--active': isSpeechListening }"
+                      :class="{
+                        'scene-composer__mic--active': isSpeechListening || isSpeechPending
+                      }"
                       type="button"
-                      :title="isSpeechListening ? '停止语音输入' : '语音输入'"
-                      :disabled="isStreaming"
+                      :title="
+                        isSpeechListening
+                          ? '停止语音输入'
+                          : isSpeechPending
+                            ? '正在启动…'
+                            : speechSupported
+                              ? '语音输入'
+                              : speechUnsupportedReason || '语音输入不可用'
+                      "
+                      :disabled="
+                        isStreaming || isSpeechBootstrapping || speechLocalModelStatus === 'downloading'
+                      "
                       @click="handleMicClick"
                     >
                       <IconMic :size="18" />
@@ -335,7 +346,7 @@
 </template>
 
 <script setup lang="ts">
-import { theme as antTheme } from 'ant-design-vue'
+import { message, theme as antTheme } from 'ant-design-vue'
 import { fetchKnowledgeBases } from '@/api/knowledge'
 import AgentToolSteps from '@/components/agent-tool-steps.vue'
 import AppNav from '@/components/app-nav.vue'
@@ -424,7 +435,12 @@ const {
 
 const {
   isSupported: speechSupported,
+  unsupportedReason: speechUnsupportedReason,
   isListening: isSpeechListening,
+  isPending: isSpeechPending,
+  isBootstrapping: isSpeechBootstrapping,
+  recognitionMode: speechRecognitionMode,
+  localModelStatus: speechLocalModelStatus,
   error: speechError,
   toggle: toggleSpeech
 } = useSpeechRecognition({
@@ -433,22 +449,48 @@ const {
   },
   onFinal: text => {
     input.value = text
-    if (text.trim() && !isStreaming.value) {
-      sendMessage()
-    }
+  },
+  onPending: () => {
+    message.loading({ content: '启动语音识别…', key: 'scene-speech', duration: 0 })
+  },
+  onListening: () => {
+    message.destroy('scene-speech')
+    message.info('正在聆听，再次点击麦克风结束', 2)
+  },
+  onError: text => {
+    message.destroy('scene-speech')
+    if (text) message.error(text, 5)
+  },
+  onSettled: () => {
+    message.destroy('scene-speech')
   }
 })
 
 function handleMicClick() {
-  if (!speechSupported.value || isStreaming.value) return
+  if (isStreaming.value) return
   speechError.value = ''
+  if (!speechSupported.value) {
+    speechError.value = speechUnsupportedReason.value || '当前环境不支持语音输入'
+    message.warning(speechError.value, 5)
+    return
+  }
   toggleSpeech(input.value)
 }
 
 const composerHint = computed(() => {
   if (isStreaming.value) return streamingStatus.value || '运行中…'
-  if (isSpeechListening.value) return '正在聆听… 说完后自动发送'
-  if (speechSupported.value) return 'Enter 发送 · 麦克风语音输入（Chrome / Edge）'
+  if (isSpeechBootstrapping.value) return '正在检测语音识别能力…'
+  if (isSpeechPending.value) return '正在启动麦克风…'
+  if (isSpeechListening.value) return '正在聆听… 再次点击麦克风结束 · Enter 手动发送'
+  if (speechLocalModelStatus.value === 'downloading') return '本地语音模型下载中，完成后可离线识别'
+  if (speechRecognitionMode.value === 'local') {
+    return 'Enter 发送 · 麦克风语音输入（本地识别，无需 Google）'
+  }
+  if (speechRecognitionMode.value === 'cloud') {
+    return 'Enter 发送 · 麦克风语音输入（云端识别，国内网络可能不可用）'
+  }
+  if (speechSupported.value) return 'Enter 发送 · 麦克风语音输入'
+  if (speechUnsupportedReason.value) return speechUnsupportedReason.value
   return 'Enter 发送'
 })
 

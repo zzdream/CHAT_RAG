@@ -49,6 +49,8 @@ interface SpeechRecognition extends EventTarget {
   continuous: boolean
   interimResults: boolean
   maxAlternatives: number
+  processLocally?: boolean
+  onstart: (() => void) | null
   onresult: ((event: SpeechRecognitionEvent) => void) | null
   onerror: ((event: SpeechRecognitionErrorEvent) => void) | null
   onend: (() => void) | null
@@ -57,7 +59,19 @@ interface SpeechRecognition extends EventTarget {
   abort(): void
 }
 
+interface SpeechRecognitionOptions {
+  langs?: string[]
+  processLocally?: boolean
+  quality?: 'command' | 'dictation' | 'conversation'
+}
+
+interface SpeechRecognitionConstructor {
+  new (): SpeechRecognition
+  available?(options: SpeechRecognitionOptions): Promise<'unavailable' | 'downloadable' | 'downloading' | 'available'>
+  install?(options: SpeechRecognitionOptions): Promise<boolean>
+}
+
 interface Window {
-  SpeechRecognition?: new () => SpeechRecognition
-  webkitSpeechRecognition?: new () => SpeechRecognition
+  SpeechRecognition?: SpeechRecognitionConstructor
+  webkitSpeechRecognition?: SpeechRecognitionConstructor
 }
