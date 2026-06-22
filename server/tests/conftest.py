@@ -23,6 +23,9 @@ from fastapi.testclient import TestClient
 
 from app.config import get_settings
 from app.config_rag import get_rag_settings
+from app.config_tools import get_tools_settings
+from app.config_agent import get_agent_settings
+from app.config_retry import get_retry_settings
 from app.schemas.chat import _chat_field_limits
 from app.schemas.chat_rag import _rag_field_limits
 from app.services import llm
@@ -42,6 +45,9 @@ def reset_cached_settings() -> None:
 
     get_settings.cache_clear()
     get_rag_settings.cache_clear()
+    get_tools_settings.cache_clear()
+    get_agent_settings.cache_clear()
+    get_retry_settings.cache_clear()
     _chat_field_limits.cache_clear()
     _rag_field_limits.cache_clear()
     llm.get_openai_client.cache_clear()
@@ -54,6 +60,9 @@ def reset_cached_settings() -> None:
     yield
     get_settings.cache_clear()
     get_rag_settings.cache_clear()
+    get_tools_settings.cache_clear()
+    get_agent_settings.cache_clear()
+    get_retry_settings.cache_clear()
     _chat_field_limits.cache_clear()
     _rag_field_limits.cache_clear()
     llm.get_openai_client.cache_clear()

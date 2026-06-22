@@ -19,6 +19,8 @@ from slowapi.errors import RateLimitExceeded
 
 from app.api.routes import chat, health
 from app.bootstrap_rag import setup_rag
+from app.bootstrap_tools import setup_tools
+from app.bootstrap_agent import setup_agent
 from app.config import get_settings
 from app.core.limiter import limiter
 
@@ -60,6 +62,8 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(chat.router)
 setup_rag(app)
+setup_tools(app)
+setup_agent(app)
 
 
 @app.get("/") # 这是 装饰器（decorator） 语法：把下面的函数「注册」成某个 HTTP 接口。等价于 app.get("/", read_root)
@@ -76,6 +80,8 @@ def read_root() -> dict[str, str]:  # 返回值类型为dict[str, str]
         "chat_stream": "/chat/stream",      # 前端实际使用的流式聊天接口
         "knowledge": "/knowledge/bases",
         "chat_rag_stream": "/chat/rag/stream",
+        "chat_tools_stream": "/chat/tools/stream",
+        "chat_agent_stream": "/chat/agent/stream",
     }
 
 

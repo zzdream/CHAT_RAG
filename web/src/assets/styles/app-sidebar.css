@@ -1,0 +1,373 @@
+/* 知识库 / 知识库问答 / 工具 Agent 共用侧边栏样式（以 rag-chat 为准） */
+
+.rag-sidebar,
+.agent-sidebar,
+.knowledge-sidebar {
+  flex-shrink: 0;
+  width: var(--sidebar-width);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 0 16px 16px;
+  z-index: 20;
+}
+
+.knowledge-sidebar {
+  overflow: auto;
+}
+
+.rag-sidebar__brand,
+.agent-sidebar__brand,
+.knowledge-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 0 12px;
+}
+
+.rag-sidebar__logo,
+.agent-sidebar__logo,
+.knowledge-sidebar__logo {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.rag-sidebar__brand-text,
+.agent-sidebar__brand-text,
+.knowledge-sidebar__brand-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.rag-sidebar__name,
+.agent-sidebar__name,
+.knowledge-sidebar__brand-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+.rag-sidebar__tagline,
+.agent-sidebar__tagline,
+.knowledge-sidebar__brand-tagline {
+  margin: 2px 0 0;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--text-muted);
+}
+
+.rag-sidebar__new,
+.agent-sidebar__new,
+.knowledge-sidebar__new {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.rag-sidebar__new:hover:not(:disabled),
+.agent-sidebar__new:hover:not(:disabled),
+.knowledge-sidebar__new:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: var(--shadow-sm);
+}
+
+.rag-sidebar__new:disabled,
+.agent-sidebar__new:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.rag-sidebar__new-icon,
+.agent-sidebar__new-icon,
+.knowledge-sidebar__new-icon {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.rag-sidebar__section,
+.agent-sidebar__section,
+.knowledge-sidebar__section {
+  padding: 0 0 8px;
+}
+
+.rag-sidebar__section--grow,
+.agent-sidebar__section--grow,
+.knowledge-sidebar__section--grow {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.rag-sidebar__section-title,
+.agent-sidebar__section-title,
+.knowledge-sidebar__section-title {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.rag-sidebar__kb-dropdown,
+.agent-sidebar__kb-dropdown {
+  width: 100%;
+}
+
+.rag-sidebar__kb-dropdown :is(.ant-select-selector),
+.agent-sidebar__kb-dropdown :is(.ant-select-selector) {
+  background: var(--bg-surface) !important;
+  border-color: var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  color: var(--text-primary);
+  height: 38px !important;
+  padding: 0 32px 0 12px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.rag-sidebar__kb-dropdown :is(.ant-select-selection-search, .ant-select-selection-wrap),
+.agent-sidebar__kb-dropdown :is(.ant-select-selection-search, .ant-select-selection-wrap) {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.rag-sidebar__kb-dropdown :is(.ant-select-selection-item, .ant-select-selection-placeholder),
+.agent-sidebar__kb-dropdown :is(.ant-select-selection-item, .ant-select-selection-placeholder) {
+  color: var(--text-primary);
+  line-height: 1.4 !important;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.rag-sidebar__kb-dropdown .ant-select-selection-placeholder,
+.agent-sidebar__kb-dropdown .ant-select-selection-placeholder {
+  color: var(--text-muted);
+}
+
+.rag-sidebar__kb-dropdown .ant-select-arrow,
+.agent-sidebar__kb-dropdown .ant-select-arrow {
+  color: var(--text-muted);
+  top: 50% !important;
+  inset-inline-end: 12px !important;
+  margin-top: 0 !important;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  height: auto;
+}
+
+.rag-sidebar__kb-dropdown:not(.ant-select-disabled):hover .ant-select-selector,
+.agent-sidebar__kb-dropdown:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: var(--border-strong) !important;
+}
+
+.rag-sidebar__kb-dropdown.ant-select-focused .ant-select-selector,
+.agent-sidebar__kb-dropdown.ant-select-focused .ant-select-selector {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px var(--accent-ring) !important;
+}
+
+.rag-sidebar__session-list,
+.agent-sidebar__session-list,
+.knowledge-sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 8px;
+}
+
+.rag-sidebar__session-item,
+.agent-sidebar__session-item,
+.knowledge-sidebar__item {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  margin-bottom: 4px;
+  border-radius: var(--radius-md);
+  transition: background 0.15s;
+}
+
+.rag-sidebar__session-item:hover,
+.agent-sidebar__session-item:hover,
+.knowledge-sidebar__item:hover {
+  background: var(--bg-elevated);
+}
+
+.rag-sidebar__session-item--active,
+.agent-sidebar__session-item--active,
+.knowledge-sidebar__item--active {
+  background: var(--accent-soft);
+}
+
+.rag-sidebar__session-item--active .rag-sidebar__session-title,
+.agent-sidebar__session-item--active .agent-sidebar__session-title,
+.knowledge-sidebar__item--active .knowledge-sidebar__name {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.rag-sidebar__session-select,
+.agent-sidebar__session-select,
+.knowledge-sidebar__select {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 10px 8px 10px 12px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+}
+
+.rag-sidebar__session-title,
+.agent-sidebar__session-title,
+.knowledge-sidebar__name {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.rag-sidebar__session-time,
+.agent-sidebar__session-time,
+.knowledge-sidebar__meta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.rag-sidebar__session-delete,
+.agent-sidebar__session-delete,
+.knowledge-sidebar__delete {
+  flex-shrink: 0;
+  width: 32px;
+  margin: 6px 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s, color 0.15s;
+  cursor: pointer;
+}
+
+.rag-sidebar__session-item:hover .rag-sidebar__session-delete,
+.rag-sidebar__session-item--active .rag-sidebar__session-delete,
+.agent-sidebar__session-item:hover .agent-sidebar__session-delete,
+.agent-sidebar__session-item--active .agent-sidebar__session-delete,
+.knowledge-sidebar__item:hover .knowledge-sidebar__delete,
+.knowledge-sidebar__item--active .knowledge-sidebar__delete {
+  opacity: 1;
+}
+
+.rag-sidebar__session-delete:hover:not(:disabled),
+.agent-sidebar__session-delete:hover:not(:disabled),
+.knowledge-sidebar__delete:hover:not(:disabled) {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.rag-sidebar__empty,
+.agent-sidebar__empty,
+.knowledge-sidebar__empty {
+  padding: 12px;
+  text-align: center;
+}
+
+.rag-sidebar__empty p,
+.agent-sidebar__empty p,
+.knowledge-sidebar__empty p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.rag-sidebar__manage,
+.agent-sidebar__manage {
+  margin-top: auto;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 13px;
+  text-align: center;
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.rag-sidebar__manage:hover,
+.agent-sidebar__manage:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .rag-sidebar,
+  .agent-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: var(--shadow-sidebar);
+  }
+
+  .rag-sidebar--open,
+  .agent-sidebar--open {
+    transform: translateX(0);
+  }
+}

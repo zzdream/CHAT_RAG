@@ -18,3 +18,9 @@ python-pptx
 rapidocr-onnxruntime
 opencv-python-headless
 pymupdf
+
+# Phase 3 Agent
+langchain
+langchain-openai
+langgraph
+tenacity

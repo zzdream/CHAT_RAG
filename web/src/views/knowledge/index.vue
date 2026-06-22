@@ -18,8 +18,10 @@
             新建知识库
           </button>
 
-          <a-spin :spinning="loading">
-            <ul v-if="bases.length" class="knowledge-sidebar__list">
+          <div class="knowledge-sidebar__section knowledge-sidebar__section--grow">
+            <p class="knowledge-sidebar__section-title">知识库列表</p>
+            <a-spin :spinning="loading">
+              <ul v-if="bases.length" class="knowledge-sidebar__list">
               <li
                 v-for="item in bases"
                 :key="item.id"
@@ -44,10 +46,11 @@
                 </a-popconfirm>
               </li>
             </ul>
-            <div v-else class="knowledge-sidebar__empty">
-              <p>创建后将显示在这里</p>
-            </div>
-          </a-spin>
+              <div v-else class="knowledge-sidebar__empty">
+                <p>创建后将显示在这里</p>
+              </div>
+            </a-spin>
+          </div>
         </aside>
 
         <section class="knowledge-main">
@@ -301,178 +304,6 @@ function formatSize(size: number) {
   min-height: 0;
   display: grid;
   grid-template-columns: var(--sidebar-width) 1fr;
-}
-
-/* ── 侧边栏 ── */
-.knowledge-sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  border-right: 1px solid var(--border);
-  background: var(--bg-sidebar);
-  padding: 0 16px 16px;
-  overflow: auto;
-  box-shadow: var(--shadow-sidebar);
-}
-
-.knowledge-sidebar__brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 20px 0 12px;
-}
-
-.knowledge-sidebar__logo {
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--accent), #7c3aed);
-  color: #fff;
-  font-weight: 700;
-  font-size: 18px;
-  box-shadow: var(--shadow-sm);
-}
-
-.knowledge-sidebar__brand-text {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 0;
-}
-
-.knowledge-sidebar__brand-name {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.3;
-  color: var(--text-primary);
-}
-
-.knowledge-sidebar__brand-tagline {
-  margin: 2px 0 0;
-  font-size: 12px;
-  line-height: 1.3;
-  color: var(--text-muted);
-}
-
-.knowledge-sidebar__new {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  margin-bottom: 12px;
-  padding: 10px 14px;
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-md);
-  background: var(--bg-surface);
-  color: var(--text-primary);
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.knowledge-sidebar__new:hover {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-  box-shadow: var(--shadow-sm);
-}
-
-.knowledge-sidebar__new-icon {
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-size: 16px;
-  line-height: 1;
-}
-
-.knowledge-sidebar__list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 8px;
-}
-
-.knowledge-sidebar__item {
-  display: flex;
-  align-items: stretch;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  background: var(--bg-surface);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.knowledge-sidebar__item--active {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent-ring);
-}
-
-.knowledge-sidebar__select {
-  flex: 1;
-  border: 0;
-  background: transparent;
-  text-align: left;
-  padding: 10px 12px;
-  cursor: pointer;
-}
-
-.knowledge-sidebar__select:hover {
-  background: var(--bg-muted);
-}
-
-.knowledge-sidebar__name {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.knowledge-sidebar__meta {
-  display: block;
-  margin-top: 4px;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.knowledge-sidebar__delete {
-  width: 36px;
-  border: 0;
-  border-left: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-muted);
-  transition: color 0.2s ease, background 0.2s ease;
-}
-
-.knowledge-sidebar__delete:hover {
-  color: var(--danger);
-  background: var(--danger-soft);
-}
-
-.knowledge-sidebar__empty {
-  margin-top: 8px;
-  padding: 20px 12px;
-  border: 1px dashed var(--border);
-  border-radius: var(--radius-md);
-  text-align: center;
-}
-
-.knowledge-sidebar__empty p {
-  margin: 0;
-  font-size: 13px;
-  color: var(--text-muted);
 }
 
 /* ── 主区域 ── */

@@ -22,6 +22,12 @@ const routes: RouteRecordRaw[] = [
     name: 'RagChat',
     component: () => import('@/views/rag-chat/index.vue'),
     meta: { title: '知识库问答' }
+  },
+  {
+    path: '/agent-chat',
+    name: 'AgentChat',
+    component: () => import('@/views/agent-chat/index.vue'),
+    meta: { title: '工具 Agent' }
   }
 ]
 
