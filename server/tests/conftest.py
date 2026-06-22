@@ -9,7 +9,7 @@ import tempfile
 os.environ.setdefault("DEEPSEEK_API_KEY", "sk-test-key-for-pytest")
 os.environ.setdefault("RATE_LIMIT_ENABLED", "false")
 
-_rag_test_dir = tempfile.mkdtemp(prefix="studyllm_rag_test_")
+_rag_test_dir = tempfile.mkdtemp(prefix="omnichat_rag_test_")
 os.environ.setdefault("RAG_SQLITE_PATH", os.path.join(_rag_test_dir, "rag.db"))
 os.environ.setdefault("RAG_CHROMA_DIR", os.path.join(_rag_test_dir, "chroma"))
 os.environ.setdefault("RAG_UPLOAD_DIR", os.path.join(_rag_test_dir, "uploads"))

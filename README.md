@@ -1,4 +1,4 @@
-# LLM
+# OmniChat
 
 基于 **Vue 3 + FastAPI + DeepSeek** 的全栈 AI 应用，从流式对话逐步扩展到 **RAG 知识库**、**工具 Agent** 与 **3D 场景 Agent**，适合作为前端 / 全栈学习项目与作品集展示。
 
@@ -47,7 +47,7 @@
 
 ## 在线 Demo
 
-> 部署后把链接填在这里，例如：`https://llm.vercel.app`
+> 部署后把链接填在这里，例如：`https://omnichat.vercel.app`
 
 本地体验：
 
@@ -171,7 +171,7 @@ cd web && pnpm typecheck && pnpm test:run
 ## 项目结构
 
 ```text
-studyLLM/
+OmniChat/
 ├── README.md
 ├── docs/
 │   ├── GETTING_STARTED.md    # Clone 后上手指南

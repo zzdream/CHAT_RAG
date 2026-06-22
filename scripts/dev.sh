@@ -30,7 +30,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-echo "🚀 启动 LLM"
+echo "🚀 启动 OmniChat"
 echo "   后端  http://localhost:8000/docs"
 echo "   前端  http://localhost:5173"
 echo "   按 Ctrl+C 同时停止"

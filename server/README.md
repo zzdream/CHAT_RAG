@@ -1,4 +1,4 @@
-# LLM — 后端服务
+# OmniChat — 后端服务
 
 基于 **Python + FastAPI** 的 AI 后端，对接 **DeepSeek**，并扩展 **RAG 知识库**、**工具 Agent** 与 **3D Scene Agent**。
 

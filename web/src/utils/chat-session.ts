@@ -9,7 +9,7 @@ import type {
   ChatSessionsStorage
 } from '@/types/chat'
 
-export const STORAGE_KEY = 'llm-chat-sessions'
+export const STORAGE_KEY = 'omnichat-chat-sessions'
 export const DEFAULT_TITLE = '新对话'
 export const SESSION_TITLE_MAX = 24
 export const MAX_HISTORY_MESSAGES = 20

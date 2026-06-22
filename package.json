@@ -1,5 +1,5 @@
 {
-  "name": "llm-root",
+  "name": "omnichat-root",
   "private": true,
   "scripts": {
     "dev": "bash scripts/dev.sh",

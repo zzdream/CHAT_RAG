@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 export type ThemeMode = 'light' | 'dark'
 
-const STORAGE_KEY = 'llm-theme'
+const STORAGE_KEY = 'omnichat-theme'
 
 function getInitialTheme(): ThemeMode {
   if (typeof window === 'undefined') return 'light'

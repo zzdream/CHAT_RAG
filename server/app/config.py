@@ -23,7 +23,7 @@ class Settings:
     """
 
     # 服务基础配置
-    app_name: str = "LLM API"
+    app_name: str = "OmniChat API"
     app_version: str = "0.1.0"
     host: str = os.getenv("APP_HOST", "0.0.0.0")       # 监听地址，0.0.0.0 = 所有网卡
     port: int = int(os.getenv("APP_PORT", "8000"))       # 监听端口

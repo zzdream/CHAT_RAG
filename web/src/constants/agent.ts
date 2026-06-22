@@ -1,4 +1,4 @@
-export const AGENT_STORAGE_KEY = 'llm-agent-sessions'
+export const AGENT_STORAGE_KEY = 'omnichat-agent-sessions'
 export const AGENT_DEFAULT_TITLE = '新对话'
 export const AGENT_DEFAULT_TOP_K = 5
 export const AGENT_PAGE_NAME = '工具 Agent'

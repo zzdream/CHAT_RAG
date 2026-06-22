@@ -32,7 +32,7 @@ settings = get_settings()
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
-    description="LLM 后端服务 — AI 聊天机器人 API",
+    description="OmniChat 后端服务 — 全栈 AI 应用 API",
 )
 
 # 限流：按 IP 统计，超出返回 429
@@ -75,7 +75,7 @@ def read_root() -> dict[str, str]:  # 返回值类型为dict[str, str]
     类似前端首页的一个 status JSON
     """
     return {
-        "message": "LLM API is running",
+        "message": "OmniChat API is running",
         "docs": "/docs",                    # FastAPI 自动生成的 Swagger 文档
         "health": "/health",
         "chat": "/chat",

@@ -1,4 +1,4 @@
-# LLM — 前端
+# OmniChat — 前端
 
 Vue 3 + TypeScript + Vite 前端，通过 Vite 代理联调 FastAPI 后端，覆盖 **流式对话**、**知识库 RAG**、**工具 Agent** 与 **3D 场景 Agent**。
 
@@ -46,7 +46,7 @@ pnpm dev
 `.env` / `.env.development`：
 
 ```env
-VITE_APP_TITLE=LLM
+VITE_APP_TITLE=OmniChat
 VITE_BASE_API=http://localhost:8000
 ```
 

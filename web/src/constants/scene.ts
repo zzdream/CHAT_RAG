@@ -1,4 +1,4 @@
-export const SCENE_STORAGE_KEY = 'llm-scene-sessions'
+export const SCENE_STORAGE_KEY = 'omnichat-scene-sessions'
 export const SCENE_DEFAULT_TITLE = '新对话'
 export const SCENE_DEFAULT_TOP_K = 5
 export const SCENE_PAGE_NAME = '3D 场景 Agent'
