@@ -1,7 +1,6 @@
 export const CHAT_MODELS = [
   { label: 'DeepSeek V4 Flash', value: 'deepseek-v4-flash' },
-  { label: 'DeepSeek Chat', value: 'deepseek-chat' },
-  { label: 'DeepSeek Reasoner', value: 'deepseek-reasoner' }
+  { label: 'DeepSeek V4 Pro', value: 'deepseek-v4-pro' }
 ] as const
 
 export const DEFAULT_CHAT_MODEL = 'deepseek-v4-flash'

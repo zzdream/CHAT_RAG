@@ -54,7 +54,7 @@ def test_chat_stream_history_exceeds_limit(client: TestClient) -> None:
         chat_system_max_length=2000,
         sensitive_words=frozenset(),
         chat_history_max_messages=2,
-        chat_allowed_models=frozenset({"deepseek-chat"}),
+        chat_allowed_models=frozenset({"deepseek-v4-flash"}),
     )
 
     with patch("app.schemas.chat.get_settings", return_value=mock_settings):

@@ -83,7 +83,7 @@ class Settings:
         model.strip()
         for model in os.getenv(
             "CHAT_ALLOWED_MODELS",
-            "deepseek-v4-flash,deepseek-chat,deepseek-reasoner",
+            "deepseek-v4-flash,deepseek-v4-pro",
         ).split(",")
         if model.strip()
     )

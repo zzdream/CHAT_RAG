@@ -140,7 +140,7 @@ curl -X POST http://127.0.0.1:8000/chat \
 ```json
 {
   "content": "你好，我是 DeepSeek ...",
-  "model": "deepseek-chat"
+  "model": "deepseek-v4-flash"
 }
 ```
 

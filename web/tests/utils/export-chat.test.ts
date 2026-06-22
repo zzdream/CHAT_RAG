@@ -11,7 +11,7 @@ const sampleSession: ChatSession = {
   id: 'session-1',
   title: 'React/Vue 对比',
   system: '你是助教',
-  model: 'deepseek-chat',
+  model: 'deepseek-v4-flash',
   temperature: 0.8,
   createdAt: 1000,
   updatedAt: 2000,
@@ -47,7 +47,7 @@ describe('buildSessionExportPayload', () => {
     expect(buildSessionExportPayload(sampleSession)).toEqual({
       title: 'React/Vue 对比',
       system: '你是助教',
-      model: 'deepseek-chat',
+      model: 'deepseek-v4-flash',
       temperature: 0.8,
       createdAt: 1000,
       updatedAt: 2000,

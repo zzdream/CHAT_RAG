@@ -58,7 +58,7 @@ describe('parseChatSessionsStorage', () => {
     id: 'session-1',
     title: '测试对话',
     system: '你是助手',
-    model: 'deepseek-chat',
+    model: 'deepseek-v4-flash',
     temperature: 0.7,
     messages: [createMessage('user', '你好', 'u1')],
     createdAt: 1,
