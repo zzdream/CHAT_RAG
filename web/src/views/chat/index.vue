@@ -1,349 +1,262 @@
 <template>
   <a-config-provider :theme="antdTheme">
     <div class="chat-app">
-    <div
-      v-if="sidebarOpen"
-      class="chat-app__backdrop"
-      @click="sidebarOpen = false"
-    />
+      <div v-if="sidebarOpen" class="chat-app__backdrop" @click="sidebarOpen = false" />
 
-    <aside class="chat-sidebar" :class="{ 'chat-sidebar--open': sidebarOpen }">
-      <div class="chat-sidebar__brand">
-        <div class="chat-sidebar__logo">S</div>
-        <div>
-          <p class="chat-sidebar__name">{{ appTitle }}</p>
-          <p class="chat-sidebar__tagline">DeepSeek · 流式对话</p>
+      <aside class="chat-sidebar" :class="{ 'chat-sidebar--open': sidebarOpen }">
+        <div class="chat-sidebar__brand">
+          <div class="chat-sidebar__logo">S</div>
+          <div>
+            <p class="chat-sidebar__name">{{ appTitle }}</p>
+            <p class="chat-sidebar__tagline">DeepSeek · 流式对话</p>
+          </div>
         </div>
-      </div>
 
-      <button
-        class="chat-sidebar__new"
-        type="button"
-        :disabled="isStreaming"
-        @click="handleNewSession"
-      >
-        <span class="chat-sidebar__new-icon">+</span>
-        新对话
-      </button>
+        <button class="chat-sidebar__new" type="button" :disabled="isStreaming" @click="handleNewSession">
+          <span class="chat-sidebar__new-icon">+</span>
+          新对话
+        </button>
 
-      <ul class="chat-sidebar__list">
-        <li
-          v-for="session in sessions"
-          :key="session.id"
-          class="chat-sidebar__item"
-          :class="{ 'chat-sidebar__item--active': session.id === activeSessionId }"
-        >
-          <button
-            class="chat-sidebar__select"
-            type="button"
-            :title="session.title"
-            :disabled="isStreaming"
-            @click="handleSwitchSession(session.id)"
+        <ul class="chat-sidebar__list">
+          <li
+            v-for="session in sessions"
+            :key="session.id"
+            class="chat-sidebar__item"
+            :class="{ 'chat-sidebar__item--active': session.id === activeSessionId }"
           >
-            <span class="chat-sidebar__title">{{ session.title }}</span>
-            <span class="chat-sidebar__time">{{ formatTime(session.updatedAt) }}</span>
-          </button>
-          <a-popconfirm
-            title="确定删除此对话？"
-            description="删除后无法恢复。"
-            ok-text="删除"
-            cancel-text="取消"
-            ok-type="danger"
-            :disabled="isStreaming"
-            @confirm="deleteSession(session.id)"
-          >
-            <button
-              class="chat-sidebar__delete"
-              type="button"
-              title="删除此对话"
-              :disabled="isStreaming"
-              @click.stop
-            >
-              ×
+            <button class="chat-sidebar__select" type="button" :title="session.title" :disabled="isStreaming" @click="handleSwitchSession(session.id)">
+              <span class="chat-sidebar__title">{{ session.title }}</span>
+              <span class="chat-sidebar__time">{{ formatTime(session.updatedAt) }}</span>
             </button>
-          </a-popconfirm>
-        </li>
-      </ul>
-    </aside>
+            <a-popconfirm
+              title="确定删除此对话？"
+              description="删除后无法恢复。"
+              ok-text="删除"
+              cancel-text="取消"
+              ok-type="danger"
+              :disabled="isStreaming"
+              @confirm="deleteSession(session.id)"
+            >
+              <button class="chat-sidebar__delete" type="button" title="删除此对话" :disabled="isStreaming" @click.stop>×</button>
+            </a-popconfirm>
+          </li>
+        </ul>
+      </aside>
 
-    <section class="chat-main">
-      <header class="chat-toolbar">
-        <div class="chat-toolbar__left">
-          <button
-            class="chat-toolbar__icon-btn chat-toolbar__menu"
-            type="button"
-            title="会话列表"
-            aria-label="打开会话列表"
-            @click="sidebarOpen = true"
-          >
-            <IconMenu :size="18" />
-          </button>
-          <h1 class="chat-toolbar__title">{{ activeSessionTitle }}</h1>
-        </div>
-        <div class="chat-toolbar__right chat-toolbar__right--desktop">
-          <button
-            class="chat-toolbar__icon-btn"
-            type="button"
-            :title="theme === 'dark' ? '浅色模式' : '深色模式'"
-            @click="toggleTheme"
-          >
-            <IconSun v-if="theme === 'dark'" :size="18" />
-            <IconMoon v-else :size="18" />
-          </button>
-          <button
-            class="chat-toolbar__pill"
-            type="button"
-            :class="{ 'chat-toolbar__pill--active': settingsDrawerOpen && settingsTab === 'model' }"
-            :disabled="isStreaming"
-            @click="openSettingsDrawer('model')"
-          >
-            模型设置
-          </button>
-          <a-dropdown :disabled="!activeSession || isStreaming" :trigger="['click']">
+      <section class="chat-main">
+        <header class="chat-toolbar">
+          <div class="chat-toolbar__left">
+            <button class="chat-toolbar__icon-btn chat-toolbar__menu" type="button" title="会话列表" aria-label="打开会话列表" @click="sidebarOpen = true">
+              <IconMenu :size="18" />
+            </button>
+            <h1 class="chat-toolbar__title">{{ activeSessionTitle }}</h1>
+          </div>
+          <div class="chat-toolbar__right chat-toolbar__right--desktop">
+            <button class="chat-toolbar__icon-btn" type="button" :title="theme === 'dark' ? '浅色模式' : '深色模式'" @click="toggleTheme">
+              <IconSun v-if="theme === 'dark'" :size="18" />
+              <IconMoon v-else :size="18" />
+            </button>
             <button
               class="chat-toolbar__pill"
               type="button"
-              :disabled="!activeSession || isStreaming"
+              :class="{ 'chat-toolbar__pill--active': settingsDrawerOpen && settingsTab === 'model' }"
+              :disabled="isStreaming"
+              @click="openSettingsDrawer('model')"
             >
-              导出
+              模型设置
             </button>
-            <template #overlay>
-              <a-menu @click="handleExport">
-                <a-menu-item key="markdown">导出 Markdown</a-menu-item>
-                <a-menu-item key="json">导出 JSON</a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
-          <button
-            class="chat-toolbar__pill"
-            type="button"
-            :class="{ 'chat-toolbar__pill--active': settingsDrawerOpen && settingsTab === 'system' }"
-            :disabled="isStreaming"
-            @click="openSettingsDrawer('system')"
-          >
-            角色设定
-          </button>
-        </div>
-        <div class="chat-toolbar__right chat-toolbar__right--mobile">
-          <a-dropdown :trigger="['click']">
+            <a-dropdown :disabled="!activeSession || isStreaming" :trigger="['click']">
+              <button class="chat-toolbar__pill" type="button" :disabled="!activeSession || isStreaming">导出</button>
+              <template #overlay>
+                <a-menu @click="handleExport">
+                  <a-menu-item key="markdown">导出 Markdown</a-menu-item>
+                  <a-menu-item key="json">导出 JSON</a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
             <button
-              class="chat-toolbar__icon-btn"
+              class="chat-toolbar__pill"
               type="button"
-              title="更多"
-              aria-label="更多操作"
+              :class="{ 'chat-toolbar__pill--active': settingsDrawerOpen && settingsTab === 'system' }"
+              :disabled="isStreaming"
+              @click="openSettingsDrawer('system')"
             >
-              ⋯
+              角色设定
             </button>
-            <template #overlay>
-              <a-menu @click="handleMobileToolbarMenu">
-                <a-menu-item key="model" :disabled="isStreaming">模型设置</a-menu-item>
-                <a-menu-item key="export-markdown" :disabled="!activeSession || isStreaming">导出 Markdown</a-menu-item>
-                <a-menu-item key="export-json" :disabled="!activeSession || isStreaming">导出 JSON</a-menu-item>
-                <a-menu-item key="system" :disabled="isStreaming">角色设定</a-menu-item>
-                <a-menu-divider />
-                <a-menu-item key="theme">{{ theme === 'dark' ? '浅色模式' : '深色模式' }}</a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
-        </div>
-      </header>
+          </div>
+          <div class="chat-toolbar__right chat-toolbar__right--mobile">
+            <a-dropdown :trigger="['click']">
+              <button class="chat-toolbar__icon-btn" type="button" title="更多" aria-label="更多操作">⋯</button>
+              <template #overlay>
+                <a-menu @click="handleMobileToolbarMenu">
+                  <a-menu-item key="model" :disabled="isStreaming">模型设置</a-menu-item>
+                  <a-menu-item key="export-markdown" :disabled="!activeSession || isStreaming">导出 Markdown</a-menu-item>
+                  <a-menu-item key="export-json" :disabled="!activeSession || isStreaming">导出 JSON</a-menu-item>
+                  <a-menu-item key="system" :disabled="isStreaming">角色设定</a-menu-item>
+                  <a-menu-divider />
+                  <a-menu-item key="theme">{{ theme === 'dark' ? '浅色模式' : '深色模式' }}</a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+          </div>
+        </header>
 
-      <a-drawer
-        v-model:open="settingsDrawerOpen"
-        class="chat-settings-drawer"
-        title="对话设置"
-        placement="right"
-        :width="settingsDrawerWidth"
-        :destroy-on-close="false"
-      >
-        <a-tabs v-model:activeKey="settingsTab" class="chat-settings-tabs">
-          <a-tab-pane key="model" tab="模型">
-            <div class="chat-drawer-section">
-              <p class="chat-drawer-section__desc">模型与采样温度（仅当前对话）</p>
-              <label class="chat-drawer-field">
-                <span>模型</span>
-                <select
-                  v-model="sessionModel"
-                  class="chat-drawer-field__select"
-                  :disabled="isStreaming"
-                >
-                  <option
-                    v-for="item in chatModels"
-                    :key="item.value"
-                    :value="item.value"
+        <a-drawer
+          v-model:open="settingsDrawerOpen"
+          class="chat-settings-drawer"
+          title="对话设置"
+          placement="right"
+          :width="settingsDrawerWidth"
+          :destroy-on-close="false"
+        >
+          <a-tabs v-model:activeKey="settingsTab" class="chat-settings-tabs">
+            <a-tab-pane key="model" tab="模型">
+              <div class="chat-drawer-section">
+                <p class="chat-drawer-section__desc">模型与采样温度（仅当前对话）</p>
+                <label class="chat-drawer-field">
+                  <span>模型</span>
+                  <select v-model="sessionModel" class="chat-drawer-field__select" :disabled="isStreaming">
+                    <option v-for="item in chatModels" :key="item.value" :value="item.value">
+                      {{ item.label }}
+                    </option>
+                  </select>
+                </label>
+                <label class="chat-drawer-field">
+                  <span>温度 {{ sessionTemperature.toFixed(1) }}</span>
+                  <input
+                    v-model.number="sessionTemperature"
+                    class="chat-drawer-field__range"
+                    type="range"
+                    :min="MIN_TEMPERATURE"
+                    :max="MAX_TEMPERATURE"
+                    :step="TEMPERATURE_STEP"
+                    :disabled="isStreaming"
+                  />
+                  <span class="chat-drawer-field__hint">低更稳定 · 高更有创意</span>
+                </label>
+              </div>
+            </a-tab-pane>
+            <a-tab-pane key="system" tab="角色">
+              <div class="chat-drawer-section">
+                <p class="chat-drawer-section__desc">系统提示词（仅当前对话）</p>
+                <div class="chat-drawer-presets">
+                  <button
+                    v-for="preset in systemPresets"
+                    :key="preset.label"
+                    class="chat-drawer-presets__item"
+                    type="button"
+                    :disabled="isStreaming"
+                    @click="applySystemPreset(preset.value)"
                   >
-                    {{ item.label }}
-                  </option>
-                </select>
-              </label>
-              <label class="chat-drawer-field">
-                <span>温度 {{ sessionTemperature.toFixed(1) }}</span>
-                <input
-                  v-model.number="sessionTemperature"
-                  class="chat-drawer-field__range"
-                  type="range"
-                  :min="MIN_TEMPERATURE"
-                  :max="MAX_TEMPERATURE"
-                  :step="TEMPERATURE_STEP"
+                    {{ preset.label }}
+                  </button>
+                </div>
+                <textarea
+                  v-model="systemPrompt"
+                  class="chat-drawer-field__textarea"
+                  rows="6"
+                  placeholder="例如：你是一位耐心的编程助教，用简洁中文回答。"
                   :disabled="isStreaming"
                 />
-                <span class="chat-drawer-field__hint">低更稳定 · 高更有创意</span>
-              </label>
-            </div>
-          </a-tab-pane>
-          <a-tab-pane key="system" tab="角色">
-            <div class="chat-drawer-section">
-              <p class="chat-drawer-section__desc">系统提示词（仅当前对话）</p>
-              <div class="chat-drawer-presets">
-                <button
-                  v-for="preset in systemPresets"
-                  :key="preset.label"
-                  class="chat-drawer-presets__item"
-                  type="button"
-                  :disabled="isStreaming"
-                  @click="applySystemPreset(preset.value)"
-                >
-                  {{ preset.label }}
-                </button>
               </div>
+            </a-tab-pane>
+          </a-tabs>
+        </a-drawer>
+
+        <div v-if="error" class="chat-alert chat-content" role="alert">
+          <span>{{ error }}</span>
+          <button class="chat-alert__close" type="button" aria-label="关闭" @click="clearError">×</button>
+        </div>
+
+        <div ref="messageListRef" class="chat-body">
+          <div class="chat-messages">
+            <div class="chat-content">
+              <div v-if="messages.length === 0" class="chat-welcome">
+                <div class="chat-welcome__icon">✦</div>
+                <h2 class="chat-welcome__title">有什么可以帮你？</h2>
+                <p class="chat-welcome__desc">基于 DeepSeek 的流式 AI 助手，支持多轮对话与 Markdown 代码高亮。</p>
+                <div class="chat-welcome__chips">
+                  <button
+                    v-for="example in exampleQuestions"
+                    :key="example"
+                    class="chat-welcome__chip"
+                    type="button"
+                    :disabled="isStreaming"
+                    @click="applyExample(example)"
+                  >
+                    {{ example }}
+                  </button>
+                </div>
+              </div>
+
+              <TransitionGroup name="chat-message" tag="div" class="chat-message-list">
+                <article v-for="message in messages" :key="message.id" class="chat-message" :class="`chat-message--${message.role}`">
+                  <div class="chat-message__body">
+                    <div class="chat-message__bubble">
+                      <div v-if="isMessageStreaming(message) && !getMessageContent(message)" class="chat-message__thinking">
+                        <span /><span /><span />
+                        思考中
+                      </div>
+                      <ChatMessageContent v-else :role="message.role" :content="getMessageContent(message)" :streaming="isMessageStreaming(message)" />
+                    </div>
+                    <div v-if="getMessageContent(message).trim() && !isMessageStreaming(message)" class="chat-message__actions">
+                      <button
+                        class="chat-message__action"
+                        :class="{ 'chat-message__action--done': copiedMessageId === message.id }"
+                        type="button"
+                        title="复制"
+                        aria-label="复制"
+                        @click="copyMessage(message)"
+                      >
+                        <IconCheck v-if="copiedMessageId === message.id" :size="15" />
+                        <IconCopy v-else :size="15" />
+                      </button>
+                      <button
+                        v-if="canRegenerate(message)"
+                        class="chat-message__action"
+                        type="button"
+                        title="重新生成"
+                        aria-label="重新生成"
+                        @click="regenerateMessage(message.id)"
+                      >
+                        <IconRegenerate :size="15" />
+                      </button>
+                    </div>
+                    <p v-if="message.role === 'assistant' && getMessageUsage(message)" class="chat-message__usage">
+                      本次约 {{ getMessageUsage(message)!.total_tokens }} tokens （输入 {{ getMessageUsage(message)!.prompt_tokens }} · 输出
+                      {{ getMessageUsage(message)!.completion_tokens }}）
+                    </p>
+                  </div>
+                </article>
+              </TransitionGroup>
+            </div>
+          </div>
+
+          <footer class="chat-composer">
+            <div class="chat-composer__box chat-content">
               <textarea
-                v-model="systemPrompt"
-                class="chat-drawer-field__textarea"
-                rows="6"
-                placeholder="例如：你是一位耐心的编程助教，用简洁中文回答。"
+                ref="inputRef"
+                v-model="input"
+                class="chat-composer__input"
+                rows="1"
+                placeholder="发消息，Enter 发送，Shift + Enter 换行"
                 :disabled="isStreaming"
+                @keydown="onKeydown"
+                @input="resizeInput"
               />
-            </div>
-          </a-tab-pane>
-        </a-tabs>
-      </a-drawer>
-
-      <div v-if="error" class="chat-alert chat-content" role="alert">
-        <span>{{ error }}</span>
-        <button class="chat-alert__close" type="button" aria-label="关闭" @click="clearError">×</button>
-      </div>
-
-      <div ref="messageListRef" class="chat-body">
-        <div class="chat-messages">
-        <div class="chat-content">
-        <div v-if="messages.length === 0" class="chat-welcome">
-          <div class="chat-welcome__icon">✦</div>
-          <h2 class="chat-welcome__title">有什么可以帮你？</h2>
-          <p class="chat-welcome__desc">基于 DeepSeek 的流式 AI 助手，支持多轮对话与 Markdown 代码高亮。</p>
-          <div class="chat-welcome__chips">
-            <button
-              v-for="example in exampleQuestions"
-              :key="example"
-              class="chat-welcome__chip"
-              type="button"
-              :disabled="isStreaming"
-              @click="applyExample(example)"
-            >
-              {{ example }}
-            </button>
-          </div>
-        </div>
-
-        <TransitionGroup name="chat-message" tag="div" class="chat-message-list">
-        <article
-          v-for="message in messages"
-          :key="message.id"
-          class="chat-message"
-          :class="`chat-message--${message.role}`"
-        >
-          <div class="chat-message__body">
-            <div class="chat-message__bubble">
-              <div
-                v-if="isMessageStreaming(message) && !getMessageContent(message)"
-                class="chat-message__thinking"
-              >
-                <span /><span /><span />
-                思考中
+              <div class="chat-composer__footer">
+                <span class="chat-composer__hint">{{ isStreaming ? '生成中…' : 'Enter 发送' }}</span>
+                <div class="chat-composer__buttons">
+                  <button v-if="isStreaming" class="chat-composer__stop" type="button" @click="stopStreaming">停止</button>
+                  <button class="chat-composer__send" type="button" title="发送" :disabled="isStreaming || !input.trim()" @click="sendMessage">
+                    <IconSend :size="18" />
+                  </button>
+                </div>
               </div>
-              <ChatMessageContent
-                v-else
-                :role="message.role"
-                :content="getMessageContent(message)"
-                :streaming="isMessageStreaming(message)"
-              />
             </div>
-            <div
-              v-if="getMessageContent(message).trim() && !isMessageStreaming(message)"
-              class="chat-message__actions"
-            >
-              <button
-                class="chat-message__action"
-                :class="{ 'chat-message__action--done': copiedMessageId === message.id }"
-                type="button"
-                title="复制"
-                aria-label="复制"
-                @click="copyMessage(message)"
-              >
-                <IconCheck v-if="copiedMessageId === message.id" :size="15" />
-                <IconCopy v-else :size="15" />
-              </button>
-              <button
-                v-if="canRegenerate(message)"
-                class="chat-message__action"
-                type="button"
-                title="重新生成"
-                aria-label="重新生成"
-                @click="regenerateMessage(message.id)"
-              >
-                <IconRegenerate :size="15" />
-              </button>
-            </div>
-            <p
-              v-if="message.role === 'assistant' && getMessageUsage(message)"
-              class="chat-message__usage"
-            >
-              本次约 {{ getMessageUsage(message)!.total_tokens }} tokens
-              （输入 {{ getMessageUsage(message)!.prompt_tokens }} · 输出 {{ getMessageUsage(message)!.completion_tokens }}）
-            </p>
-          </div>
-        </article>
-        </TransitionGroup>
+          </footer>
         </div>
-        </div>
-
-      <footer class="chat-composer">
-        <div class="chat-composer__box chat-content">
-          <textarea
-            ref="inputRef"
-            v-model="input"
-            class="chat-composer__input"
-            rows="1"
-            placeholder="发消息，Enter 发送，Shift + Enter 换行"
-            :disabled="isStreaming"
-            @keydown="onKeydown"
-            @input="resizeInput"
-          />
-          <div class="chat-composer__footer">
-            <span class="chat-composer__hint">{{ isStreaming ? '生成中…' : 'Enter 发送' }}</span>
-            <div class="chat-composer__buttons">
-              <button
-                v-if="isStreaming"
-                class="chat-composer__stop"
-                type="button"
-                @click="stopStreaming"
-              >
-                停止
-              </button>
-              <button
-                class="chat-composer__send"
-                type="button"
-                title="发送"
-                :disabled="isStreaming || !input.trim()"
-                @click="sendMessage"
-              >
-                <IconSend :size="18" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </footer>
-      </div>
-    </section>
+      </section>
     </div>
   </a-config-provider>
 </template>
@@ -360,23 +273,14 @@ import IconMoon from '@/components/icons/icon-moon.vue'
 import IconRegenerate from '@/components/icons/icon-regenerate.vue'
 import IconSend from '@/components/icons/icon-send.vue'
 import IconSun from '@/components/icons/icon-sun.vue'
-import {
-  CHAT_MODELS,
-  MAX_TEMPERATURE,
-  MIN_TEMPERATURE,
-  TEMPERATURE_STEP
-} from '@/constants/chat'
+import { CHAT_MODELS, MAX_TEMPERATURE, MIN_TEMPERATURE, TEMPERATURE_STEP } from '@/constants/chat'
 import { useChatStream } from '@/hooks/use-chat-stream'
 import { useAppStore } from '@/store'
 import { exportSessionAsJson, exportSessionAsMarkdown } from '@/utils/export-chat'
 
 const chatModels = CHAT_MODELS
 
-const exampleQuestions = [
-  '用 Python 写一个快速排序',
-  '解释什么是 SSE 流式输出',
-  'React 和 Vue 有什么区别？'
-]
+const exampleQuestions = ['用 Python 写一个快速排序', '解释什么是 SSE 流式输出', 'React 和 Vue 有什么区别？']
 
 const systemPresets = [
   { label: '编程助教', value: '你是一位耐心的编程助教，用简洁中文回答，必要时附带可运行代码示例。' },
@@ -631,7 +535,9 @@ function formatTime(timestamp: number): string {
   background: var(--bg-surface);
   color: var(--text-primary);
   font-weight: 600;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 
 .chat-sidebar__new:hover:not(:disabled) {
@@ -718,7 +624,10 @@ function formatTime(timestamp: number): string {
   font-size: 18px;
   line-height: 1;
   opacity: 0;
-  transition: opacity 0.15s, background 0.15s, color 0.15s;
+  transition:
+    opacity 0.15s,
+    background 0.15s,
+    color 0.15s;
 }
 
 .chat-sidebar__item:hover .chat-sidebar__delete,
@@ -795,7 +704,9 @@ function formatTime(timestamp: number): string {
   border-radius: var(--radius-sm);
   background: var(--bg-elevated);
   color: var(--text-secondary);
-  transition: border-color 0.15s, color 0.15s;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
 }
 
 .chat-toolbar__icon-btn:hover {
@@ -1102,7 +1013,9 @@ function formatTime(timestamp: number): string {
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--text-muted);
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .chat-message__action:hover {
@@ -1148,12 +1061,7 @@ function formatTime(timestamp: number): string {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: linear-gradient(
-    to top,
-    var(--composer-fade-solid) 0%,
-    var(--composer-fade-mid) 42%,
-    var(--composer-fade-clear) 100%
-  );
+  background: linear-gradient(to top, var(--composer-fade-solid) 0%, var(--composer-fade-mid) 42%, var(--composer-fade-clear) 100%);
   -webkit-backdrop-filter: blur(var(--composer-blur)) saturate(1.15);
   backdrop-filter: blur(var(--composer-blur)) saturate(1.15);
   -webkit-mask-image: linear-gradient(to top, #000 58%, transparent 100%);
@@ -1230,7 +1138,9 @@ function formatTime(timestamp: number): string {
   border-radius: 50%;
   background: var(--accent);
   color: #fff;
-  transition: background 0.15s, transform 0.15s;
+  transition:
+    background 0.15s,
+    transform 0.15s;
 }
 
 .chat-composer__send:hover:not(:disabled) {
